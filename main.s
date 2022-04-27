@@ -23,7 +23,9 @@ r0 = $02
 
 r1 = $04
 playersy:
-    .word $4;move_ratio
+player1y:
+    .word $4
+player2y:
     .word $4
 ;ball's x,y posytion
 ball_x_y:
@@ -48,28 +50,41 @@ infinite_loop:
 
 ;game loop called with interupt 
 game_loop:
-  ;  jsr update_ball
+
     jsr update_ball
     jsr update_sprites
-    ; KEYBOARD INPUT 
+    ; KEYBOARD INPUT  / JOYSTICK INPUT 
+    ; rest of input handeling isn't comented since only masks for bit wise operations are different
     lda #0
-    jsr $FF56 ; joystick_get
-    tay
-    eor #%00001000
-    and #%00001000
-    bne move_player2_up
-    tya
+    jsr $FF56 ; joystick_get ; see comander x16 docs for KERNAL sub routines
+    eor #%00001000 ; get bits responsible for particular button thou mask
+    and #%00001000 ;
+    beq @move_player2_up_not_pressed ; if result is zero "skip one instruction",
+    jsr move_player2_up  ;else jump to sub routine that is responsible for particular button
+@move_player2_up_not_pressed:
+    lda #0
+    jsr $FF56
     eor #%00000100
     and #%00000100
-    bne move_player2_down
-    tya
+    beq @move_player2_down_not_pressed
+    jsr move_player2_down
+@move_player2_down_not_pressed:
+    lda #0
+    jsr $FF56
     eor #%01000000
     and #%01000000
-    bne move_player1_up
+    beq @move_player1_up_not_pressed
+    jsr  move_player1_up
+@move_player1_up_not_pressed:
+    lda #0
+    jsr $FF56
     txa
     eor #%10000000
     and #%10000000
-    bne move_player1_down
+    beq @move_player1_down_not_pressed
+    jsr  move_player1_down
+
+@move_player1_down_not_pressed:   
 
 
 
@@ -138,13 +153,13 @@ move_up_no_check:
     sbc  #0
     sta playersy,x
 
-    jmp (Default_irq_handler)
+    rts
 set_y_to_default:
     lda #0
     sta playersy,x
     inx 
     sta playersy,x
-    jmp (Default_irq_handler)
+    rts
 
 low_barier:
     .word 416
@@ -181,7 +196,7 @@ move_down_no_check:
     lda playersy,x
     adc #0
     sta playersy,x
-    jmp (Default_irq_handler)
+    rts
 set_y_to_max:
     lda low_barier,x
     sta playersy,x
@@ -189,5 +204,5 @@ set_y_to_max:
     lda low_barier,x
     sta playersy,x
     dex
-    jmp (Default_irq_handler)
+    rts
 
