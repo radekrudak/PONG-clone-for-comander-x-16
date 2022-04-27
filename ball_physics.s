@@ -1,6 +1,8 @@
 
 .include "./ball_physics_sub_routines/check_lower_bound.s"
 .include "./ball_physics_sub_routines/check_upper_bound.s"
+.include "./ball_physics_sub_routines/check_colysion_with_p2.s"
+.include "./ball_physics_sub_routines/check_colysion_with_p1.s"
 ;adds velocity vector to ball's y and x coordinates
 update_ball:
 ; add x of vector to x posytion of ball
@@ -14,11 +16,20 @@ update_ball:
     lda ball_x+1 ;load high side of x
     adc #0
     sta ball_x+1
+    jmp @update_y
 @x_vector_is_negative:
-    
+    and #$F
+    sta @temp_accumulator 
+    lda ball_x ; load low side of x
+    sec
+    sbc @temp_accumulator 
+    sta ball_x 
+    lda ball_x+1 ;load high side of x
+    sbc #0
+    sta ball_x+1 
 
 
-
+@update_y:
 
 ; add y of vector to y posytion of ball    
     lda ball_velocity+1
@@ -59,7 +70,11 @@ update_ball:
 
 @check_lower_bound:
     jsr check_lower_bound
+
     jsr check_colysion_with_p1
+    jsr check_colysion_with_p2
+
+
 
 
 @end_of_update:

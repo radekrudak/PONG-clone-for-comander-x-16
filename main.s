@@ -22,6 +22,8 @@ VERA_data0 = $9F23
 r0 = $02
 
 r1 = $04
+player1_x = $10
+player2_x = $0268
 playersy:
 player1y:
     .word $4
@@ -30,9 +32,9 @@ player2y:
 ;ball's x,y posytion
 ball_x_y:
 ball_x:
-    .word 128
+    .word 320
 ball_y:
-    .word 0
+    .word 240
 ;ball's velocity vector
 ball_default_velocity = 3 
 ball_velocity:
