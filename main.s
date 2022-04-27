@@ -28,8 +28,15 @@ playersy:
 player1y:
     .word $4
 player2y:
-    .word $4
+    .word move_ratio*4
 ;ball's x,y posytion
+player1_points:
+    .byte $0
+player2_points:
+    .byte $0
+
+ball_default_x = 320
+ball_default_y = 230
 ball_x_y:
 ball_x:
     .word 320
@@ -37,6 +44,7 @@ ball_y:
     .word 240
 ;ball's velocity vector
 ball_default_velocity = 3 
+
 ball_velocity:
     .byte ball_default_velocity ;x 
     .byte ball_default_velocity;y
