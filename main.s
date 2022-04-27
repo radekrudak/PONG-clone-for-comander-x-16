@@ -29,17 +29,18 @@ player1y:
     .word $4
 player2y:
     .word 16 *4
+
 ;ball's x,y posytion
 player1_points:
     .byte $0
 player2_points:
     .byte $0
 
-ball_default_x = 320
-ball_default_y = 230
+ball_default_x = 200
+ball_default_y = 200
 ball_x_y:
 ball_x:
-    .word 320
+    .word 400
 ball_y:
     .word 240
 ;ball's velocity vector

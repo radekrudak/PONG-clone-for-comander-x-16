@@ -61,6 +61,7 @@ update_ball:
 
 ;collysion cheking 
 
+
     lda ball_y+1
     bmi @lower_bound_hit
     cmp #1
@@ -73,13 +74,20 @@ update_ball:
     jmp  @check_lower_bound
 @lower_bound_hit:
     lda #ball_default_velocity ;bump baLL
+
+
+
     sta ball_velocity+1
 
 @check_lower_bound:
-   ; jsr check_lower_bound
+
+    
+
     jsr check_right_bound
-    jsr check_colysion_with_p1
     jsr check_colysion_with_p2
+    jsr check_colysion_with_p1
+
+   
 
 
 
@@ -87,5 +95,6 @@ update_ball:
 @end_of_update:
     rts
     ; jmp (Default_irq_handler)
-
+@tmp_ball_y:
+    .word 0
 
