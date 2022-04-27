@@ -3,6 +3,7 @@
 .include "./ball_physics_sub_routines/check_upper_bound.s"
 .include "./ball_physics_sub_routines/check_colysion_with_p2.s"
 .include "./ball_physics_sub_routines/check_colysion_with_p1.s"
+.include "./ball_physics_sub_routines/check_right_bound.s"
 ;adds velocity vector to ball's y and x coordinates
 update_ball:
 ; add x of vector to x posytion of ball
@@ -60,17 +61,23 @@ update_ball:
 
 ;collysion cheking 
 
-    jsr check_upper_bound ; if ball hits upper boud this sub rt. returns 2 in A reg 
-    cmp #2 ;if result < 2 
-    bcc @check_lower_bound ; check lower bond
-    lda #$80+ball_default_velocity ;else bump ball
+    lda ball_y+1
+    bmi @lower_bound_hit
+    cmp #1
+    bcc @check_lower_bound
+    lda ball_y
+    cmp #$D0
+    bcc @check_lower_bound
+    lda #ball_default_velocity+$80 ;bump baLL
     sta ball_velocity+1
-    jmp @end_of_update
-
+    jmp  @check_lower_bound
+@lower_bound_hit:
+    lda #ball_default_velocity ;bump baLL
+    sta ball_velocity+1
 
 @check_lower_bound:
-    jsr check_lower_bound
-
+   ; jsr check_lower_bound
+    jsr check_right_bound
     jsr check_colysion_with_p1
     jsr check_colysion_with_p2
 

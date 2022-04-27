@@ -28,7 +28,7 @@ playersy:
 player1y:
     .word $4
 player2y:
-    .word move_ratio*4
+    .word 16 *4
 ;ball's x,y posytion
 player1_points:
     .byte $0

@@ -5,7 +5,7 @@ check_colysion_with_p2:
     sbc #8
     sta @tmp_player_y
     lda player2y+1
-    sbc #1
+    sbc #0
     sta @tmp_player_y+1
 ;check if ball's x is within range ofp layer 2 x
     ; if ball_y < @tmp_player_y go to @end_of_check_colysion_with_p2
