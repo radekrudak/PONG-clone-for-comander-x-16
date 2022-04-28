@@ -1,6 +1,3 @@
-
-.include "./ball_physics_sub_routines/check_lower_bound.s"
-.include "./ball_physics_sub_routines/check_upper_bound.s"
 .include "./ball_physics_sub_routines/check_colysion_with_p2.s"
 .include "./ball_physics_sub_routines/check_colysion_with_p1.s"
 .include "./ball_physics_sub_routines/check_right_bound.s"
@@ -65,32 +62,38 @@ update_ball:
     lda ball_y+1
     bmi @lower_bound_hit
     cmp #1
-    bcc @check_lower_bound
+    bcc @check_vertical_bounds
     lda ball_y
     cmp #$D0
-    bcc @check_lower_bound
+    bcc @check_vertical_bounds
     lda #ball_default_velocity+$80 ;bump baLL
     sta ball_velocity+1
-    jmp  @check_lower_bound
+    jmp  @check_vertical_bounds
 @lower_bound_hit:
     lda #ball_default_velocity ;bump baLL
-
-
-
     sta ball_velocity+1
 
-@check_lower_bound:
+@check_vertical_bounds:
 
-    
+    lda ball_x+1
+    bpl @chceck_right_bound
+    ; if ball x is negative add point and reset it's posytion 
+    ;adding point for player 1
+    lda player2_points
+    clc
+    sed
+    adc #1
+    sta player2_points
+    cld
+    ;reset ball
+    jsr reset_ball
 
+
+@chceck_right_bound:
     jsr check_right_bound
+
     jsr check_colysion_with_p2
     jsr check_colysion_with_p1
-
-   
-
-
-
 
 @end_of_update:
     rts
@@ -98,3 +101,17 @@ update_ball:
 @tmp_ball_y:
     .word 0
 
+reset_ball:
+    lda #.lobyte(ball_default_x)
+    sta ball_x
+    lda #.hibyte(ball_default_x)
+    sta ball_x+1
+
+    lda #.lobyte(ball_default_y)
+    sta ball_y
+    lda #.hibyte(ball_default_y)
+    sta ball_y+1
+
+    lda #ball_default_velocity
+    sta ball_velocity
+    sta ball_velocity+1
