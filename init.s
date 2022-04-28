@@ -1,4 +1,3 @@
-.include "./init_sub_routines/init_bitmap_mode.s"
 .include "./init_sub_routines/init_sprites.s"
 .include "./init_sub_routines/init_text_mode.s"
 .include "./init_sub_routines/init_interupts.s"
