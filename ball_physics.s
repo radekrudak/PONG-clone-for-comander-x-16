@@ -85,7 +85,7 @@ update_ball:
     adc #1
     sta player2_points
     cld
-    ;reset ball
+    
     jsr reset_ball
 
 
@@ -115,3 +115,57 @@ reset_ball:
     lda #ball_default_velocity
     sta ball_velocity
     sta ball_velocity+1
+    jsr update_score
+    rts
+update_score:
+    ;set vera ddres to point where score for p1 should be displayed
+    lda #$26
+    sta VERA_addrsL
+    lda #$B3
+    sta VERA_addrsM
+    lda #$21
+    sta VERA_addrsH
+    ;load p1 points, shift right 4 tomes to get first 4 most significant bits, 
+    ;mask out those 4 bits and convert to petscii
+    lda player1_points
+    LSR
+    LSR
+    LSR
+    LSR
+    and #$0F
+    ora #$30
+    sta VERA_data0
+    ;load p1, maks first 4 bits set first 4 bits to 3 to conver raw decimal to petscii
+    lda player1_points
+    and #$0F
+    ora #$30
+    sta VERA_data0
+
+
+    ;set vera ddres to point where score for p2 should be displayed
+    lda #$74
+    sta VERA_addrsL
+    lda #$B3
+    sta VERA_addrsM
+    lda #$21
+    sta VERA_addrsH
+    ;load p2 points, shift right 4 tomes to get first 4 most significant bits, 
+    ;mask out those 4 bits and convert to petscii
+    lda player2_points
+    LSR
+    LSR
+    LSR
+    LSR
+    and #$0F
+    ora #$30
+    sta VERA_data0
+
+    ;load p2, maks first 4 bits set first 4 bits to 3 to conver raw decimal to petscii
+    lda player2_points
+    and #$0F
+    ora #$30
+    sta VERA_data0
+
+
+
+    rts

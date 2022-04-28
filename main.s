@@ -44,7 +44,7 @@ ball_x:
 ball_y:
     .word 240
 ;ball's velocity vector
-ball_default_velocity = 3 
+ball_default_velocity = 3
 
 ball_velocity:
     .byte ball_default_velocity ;x 
